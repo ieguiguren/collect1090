@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 # if time is o'clock
 if [[ $(date +%M) == "00" ]] ; then
@@ -7,15 +7,12 @@ if [[ $(date +%M) == "00" ]] ; then
     killall nc
 
     # set hour, day and month for the previous hour
-    if  [[ $(date +%h) == "00" ]] ; then
+    if  [[ $(date +%H) == "00" ]] ; then
       HOUR="23"
-    else
-      HOUR=$(( $( date +%H) - 1 ))
-    fi
-    if [[ $( date +%d ) == "01" ]] ; then
       DAY=$( date --date yesterday +%d )
       MONTH=$( date --date yesterday +%m )
     else
+      HOUR=`printf %02d $(( $( date +%H) - 1 ))`
       DAY=$( date +%d )
       MONTH=$( date +%m )
     fi
@@ -24,7 +21,7 @@ if [[ $(date +%M) == "00" ]] ; then
     if [[ -f /root/collect1090/dumps/$MONTH/$DAY/${HOUR}.txt ]] ; then
         gzip /root/collect1090/dumps/$MONTH/$DAY/${HOUR}.txt
         cd /root/collect1090/dumps/
-        git add $MONTH/$DAY/$HOUR
+        git add $MONTH/$DAY/${HOUR}.txt.gz
         git commit -m "file for month $MONTH day $DAY at $HOUR"
         git push origin master
     fi
