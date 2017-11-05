@@ -1,2 +1,4 @@
-dump*.txt*
+dump*txt*
+.*
 nohup.out
+*.txt
